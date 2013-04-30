@@ -1,4 +1,4 @@
-raptor-js
+RaptorJS
 =========
 
-Javascript Runtime Framework
+Javascript runtime framework written in Java
