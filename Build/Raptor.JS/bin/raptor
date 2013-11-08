@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+##############
+# Raptor.JS Runtime Control Script
+#
+# Written by: Ted Elwartowski (2013)
+##############
+
+R_JS_CLASS="org.jdog.Raptor.js.App"
+R_JS_CLASSPATH="../lib"
+JAVA_PATH="../jre"
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]
+do
+	DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+	SOURCE="$(readlink "$SOURCE")"
+	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+if [ -e "$DIR/$JAVA_PATH" ]
+then
+	JAVA_HOME="$DIR/$JAVA_PATH"
+	PATH="$JAVA_HOME/bin:$PATH"
+	export PATH
+fi
+
+CLASSPATH="."
+for CP in "$R_JS_CLASSPATH"
+do
+	if [ -d "$DIR/$CP" ]	
+	then
+		for FILE in `ls "$DIR/$CP"`
+		do
+			CLASSPATH="$CLASSPATH:$DIR/$CP/$FILE"	
+		done
+	else
+		CLASSPATH="$CLASSPATH:$DIR/$CP"	
+	fi
+done
+export CLASSPATH
+
+java -Draptor.bin.dir="$DIR" "$R_JS_CLASS" $@
