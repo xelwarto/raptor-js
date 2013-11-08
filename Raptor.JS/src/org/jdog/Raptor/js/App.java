@@ -26,10 +26,10 @@ public class App {
 					}
 
 					appHandler = ApplicationHandler.getHandler(cfgFile);
-					
+
 					if (appHandler != null) {
 						appHandler.setParamsMap(paramsMap);
-						
+
 						String jsFile = null;
 						if (paramsMap.get("js") != null
 								&& !paramsMap.get("js").equals("")) {
