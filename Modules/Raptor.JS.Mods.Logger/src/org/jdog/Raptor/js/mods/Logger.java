@@ -120,6 +120,7 @@ public class Logger extends Module {
 			if (thisLogger.writer != null) {
 				thisLogger.writer.write(entry);
 				thisLogger.writer.newLine();
+				thisLogger.writer.flush();
 			}
 
 			if (!thisLogger.isQuiet) {
@@ -144,6 +145,7 @@ public class Logger extends Module {
 				if (thisLogger.writer != null) {
 					thisLogger.writer.write(entry);
 					thisLogger.writer.newLine();
+					thisLogger.writer.flush();
 				}
 
 				if (!thisLogger.isQuiet) {
