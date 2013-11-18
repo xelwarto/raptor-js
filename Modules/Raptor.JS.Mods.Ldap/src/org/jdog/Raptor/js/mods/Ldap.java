@@ -294,9 +294,43 @@ public class Ldap extends Module {
         }
         
         if (args[0] != null && args[1] != null) {
-        	if (args[0] instanceof String && args[1] instanceof String) {
+        	String oldDN = null;
+        	String newDN = null;
+        	
+        	if (args[0] instanceof String) {
+        		oldDN = (String) args[0];
+        	} else if (args[0] instanceof NativeJavaObject) {
+        		NativeJavaObject obj = (NativeJavaObject) args[0];
+                Object o = obj.unwrap();
+                
+                if (o instanceof String) {
+                	oldDN = (String) o;
+                } else {
+                	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+                }
+        	} else {
+        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+        	}
+        	
+        	if (args[1] instanceof String) {
+        		newDN = (String) args[1];
+        	} else if (args[1] instanceof NativeJavaObject) {
+        		NativeJavaObject obj = (NativeJavaObject) args[1];
+                Object o = obj.unwrap();
+                
+                if (o instanceof String) {
+                	newDN = (String) o;
+                } else {
+                	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+                }
+        	} else {
+        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+        	}
+        	
+        	
+        	if (oldDN != null && newDN != null) {
 	            if (thisLdap.ctx != null) {
-	            	thisLdap.ctx.rename((String) args[0], (String) args[1]);
+	            	thisLdap.ctx.rename(oldDN, newDN);
 	            } else {
 	            	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: Ldap connection is null");
 	            }
@@ -324,21 +358,41 @@ public class Ldap extends Module {
             throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid number of arguments");
         }
         
-        if (args[0] != null && args[0] instanceof String) {
-        	Object[] obj = null;
-        	LdapName dn = new LdapName((String) args[0]);
-        	
-        	if (dn != null && dn.size() > 0) {
-        		obj = new Object[dn.size()];
-                for (int i = 0; i < dn.size(); i++) {
-                    obj[i] = dn.get(i);
+        if (args[0] != null) {
+        	String name = null;
+        	if (args[0] instanceof String) {
+        		name = (String) args[0];
+        	} else if (args[0] instanceof NativeJavaObject) {
+        		NativeJavaObject obj = (NativeJavaObject) args[0];
+                Object o = obj.unwrap();
+                
+                if (o instanceof String) {
+                	name = (String) o;
+                } else {
+                	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
                 }
-                return obj;
         	} else {
-        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid DN type");
+        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+        	}
+        	
+        	if (name != null) {
+        		Object[] obj = null;
+            	LdapName dn = new LdapName(name);
+            	
+            	if (dn != null && dn.size() > 0) {
+            		obj = new Object[dn.size()];
+                    for (int i = 0; i < dn.size(); i++) {
+                        obj[i] = dn.get(i);
+                    }
+                    return obj;
+            	} else {
+            		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid DN type");
+            	}
+        	} else {
+        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
         	}
         } else {
-            throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+        	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
         }
     }
 
