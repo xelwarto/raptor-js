@@ -283,11 +283,38 @@ public class Ldap extends Module {
             throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: Ldap connection is null");
         }
     }
+    
+    public static void jsFunction_rename(org.mozilla.javascript.Context cx, Scriptable thisObj,
+            Object[] args, Function funObj) throws Exception {
+        Ldap thisLdap = checkInstance(thisObj);
+        
+        if (args != null && args.length != 2) {
+            throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid number of arguments");
+        }
+        
+        if (args[0] != null && args[1] != null) {
+        	if (args[0] instanceof String && args[1] instanceof String) {
+	            if (thisLdap.ctx != null) {
+	            	thisLdap.ctx.rename((String) args[0], (String) args[1]);
+	            } else {
+	            	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: Ldap connection is null");
+	            }
+        	} else {
+        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+        	}
+        } else {
+            throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+        }
+    }
 
     public static DirContext jsFunction_getContext(org.mozilla.javascript.Context cx, Scriptable thisObj,
             Object[] args, Function funObj) throws Exception {
         Ldap thisLdap = checkInstance(thisObj);
-        return thisLdap.ctx;
+        if (thisLdap.ctx != null) {
+        	return thisLdap.ctx;
+        } else {
+        	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: Ldap connection is null");
+        }
     }
 
     @Override

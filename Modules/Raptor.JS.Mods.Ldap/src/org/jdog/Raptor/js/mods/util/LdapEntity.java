@@ -162,6 +162,7 @@ public class LdapEntity {
 
     public void replaceAttribute(String name, Object value) {
         if (name != null && !name.equals("")) {
+        	name = name.toLowerCase();
             if (value != null) {
                 List<Object> objValues = new ArrayList<Object>();
                 if (value instanceof NativeArray) {
@@ -184,10 +185,7 @@ public class LdapEntity {
                     objValues.add(value);
                 }
 
-                if (objValues != null) {
-                    attrHandler.replaceAttribute(name, objValues);
-                    attrList.put(name, objValues);
-                }
+                _replaceAttribute(name, objValues);
             } else {
                 throw org.mozilla.javascript.Context.reportRuntimeError("LdapEntity Exception: null pointer exception (value)");
             }
@@ -261,8 +259,10 @@ public class LdapEntity {
 
     private void _removeAttribute(String name, List<Object> objValues) {
         if (name != null && !name.equals("")) {
-            if (objValues != null) {
-                if (_getAttribute(name) != null) {
+        	name = name.toLowerCase();
+        	
+        	if (_getAttribute(name) != null) {
+	            if (objValues != null && objValues.size() > 0) {
                     attrHandler.removeAttribute(name, objValues);
                     List<Object> values = new ArrayList<Object>();
                     Iterator<Object> it = _getAttribute(name).iterator();
@@ -272,21 +272,37 @@ public class LdapEntity {
                             if (!objValues.contains(attrValue)) {
                                 values.add(attrValue);
                             }
-
                         }
                     }
                     if (values != null && values.size() > 0) {
                         attrList.put(name, values);
                     } else {
                         attrList.remove(name);
+                        attributes.remove(name);
                     }
-                }
-            } else {
-                if (_getAttribute(name) != null) {
+	            } else {
                     attrHandler.removeAttribute(name);
                     attrList.remove(name);
+                    attributes.remove(name);
                 }
             }
+        } else {
+            throw org.mozilla.javascript.Context.reportRuntimeError("LdapEntity Exception: null pointer exception (name)");
+        }
+    }
+    
+    private void _replaceAttribute(String name, List<Object> objValues) {
+        if (name != null && !name.equals("")) {
+        	name = name.toLowerCase();
+        	
+        	if (_getAttribute(name) != null) {
+	            if (objValues != null && objValues.size() > 0) {
+	                	attrHandler.replaceAttribute(name, objValues);
+	                    attrList.put(name, objValues);
+	            } else {
+	            	throw org.mozilla.javascript.Context.reportRuntimeError("LdapEntity Exception: null pointer exception (objValues)");
+	            }
+        	}
         } else {
             throw org.mozilla.javascript.Context.reportRuntimeError("LdapEntity Exception: null pointer exception (name)");
         }
@@ -294,14 +310,15 @@ public class LdapEntity {
 
     private void _addAttribute(String name, List<Object> objValues) {
         if (name != null && !name.equals("")) {
-            if (objValues != null) {
+        	name = name.toLowerCase();
+            if (objValues != null && objValues.size() > 0) {
                 attrHandler.addAttribute(name, objValues);
                 if (_getAttribute(name) != null) {
                     List<Object> values = (List<Object>) _getAttribute(name);
                     values.addAll(objValues);
-                    attrList.put(name.toLowerCase(), values);
+                    attrList.put(name, values);
                 } else {
-                    attrList.put(name.toLowerCase(), objValues);
+                    attrList.put(name, objValues);
                 }
                 attributes.add(name);
             } else {
