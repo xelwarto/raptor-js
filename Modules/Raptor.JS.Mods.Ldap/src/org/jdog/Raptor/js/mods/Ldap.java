@@ -5,6 +5,7 @@ package org.jdog.Raptor.js.mods;
 
 import javax.naming.*;
 import javax.naming.directory.*;
+import javax.naming.ldap.LdapName;
 
 import org.jdog.Raptor.js.mods.util.LdapEntity;
 import org.jdog.Raptor.js.mods.util.LdapResults;
@@ -314,6 +315,30 @@ public class Ldap extends Module {
         	return thisLdap.ctx;
         } else {
         	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: Ldap connection is null");
+        }
+    }
+    
+    public static Object[] jsFunction_getRdn(org.mozilla.javascript.Context cx, Scriptable thisObj,
+            Object[] args, Function funObj) throws Exception {
+    	if (args != null && args.length < 1) {
+            throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid number of arguments");
+        }
+        
+        if (args[0] != null && args[0] instanceof String) {
+        	Object[] obj = null;
+        	LdapName dn = new LdapName((String) args[0]);
+        	
+        	if (dn != null && dn.size() > 0) {
+        		obj = new Object[dn.size()];
+                for (int i = 0; i < dn.size(); i++) {
+                    obj[i] = dn.get(i);
+                }
+                return obj;
+        	} else {
+        		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid DN type");
+        	}
+        } else {
+            throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
         }
     }
 
