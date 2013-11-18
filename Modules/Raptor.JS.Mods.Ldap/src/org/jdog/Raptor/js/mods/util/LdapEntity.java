@@ -319,8 +319,8 @@ public class LdapEntity {
                     attrList.put(name, values);
                 } else {
                     attrList.put(name, objValues);
+                    attributes.add(name);
                 }
-                attributes.add(name);
             } else {
                 throw org.mozilla.javascript.Context.reportRuntimeError("LdapEntity Exception: null pointer exception (objValues)");
             }
