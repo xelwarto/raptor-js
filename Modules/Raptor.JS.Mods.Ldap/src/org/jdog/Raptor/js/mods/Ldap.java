@@ -125,26 +125,70 @@ public class Ldap extends Module {
                 Object objScope = obj.get("scope", obj);
                 Object objAttrs = obj.get("attrs", obj);
 
-                if (objBase != null && objBase instanceof String) {
-                    base = (String) objBase;
-                    if (base.equals("")) {
-                        throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (base)");
+                if (objBase != null) {
+                	if (objBase instanceof String) {
+                		base = (String) objBase;
+                	} else if (objBase instanceof NativeJavaObject) {
+                		NativeJavaObject ntvObj = (NativeJavaObject) objBase;
+                        Object ntvObj2 = ntvObj.unwrap();
+                        if (ntvObj2 instanceof String) {
+                            base = (String) ntvObj2;
+                        } else {
+                        	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+                        }
+                	} else {
+                		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
                     }
                 } else {
                     throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (base)");
                 }
-
-                if (objFilter != null && objFilter instanceof String) {
-                    filter = (String) objFilter;
-                    if (filter.equals("")) {
-                        throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (filter)");
+                
+                if (base == null || base.equals("")) {
+                	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (base)");
+                }
+                
+                if (objFilter != null) {
+                	if (objFilter instanceof String) {
+                		base = (String) objFilter;
+                	} else if (objFilter instanceof NativeJavaObject) {
+                		NativeJavaObject ntvObj = (NativeJavaObject) objFilter;
+                        Object ntvObj2 = ntvObj.unwrap();
+                        if (ntvObj2 instanceof String) {
+                            filter = (String) ntvObj2;
+                        } else {
+                        	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+                        }
+                	} else {
+                		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
                     }
                 } else {
                     throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (filter)");
                 }
-
-                if (objScope != null && objScope instanceof String) {
-                    scope = (String) objScope;
+                
+                if (filter == null || filter.equals("")) {
+                	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (filter)");
+                }
+                
+                if (objScope != null) {
+                	if (objScope instanceof String) {
+                		base = (String) objScope;
+                	} else if (objScope instanceof NativeJavaObject) {
+                		NativeJavaObject ntvObj = (NativeJavaObject) objScope;
+                        Object ntvObj2 = ntvObj.unwrap();
+                        if (ntvObj2 instanceof String) {
+                            scope = (String) ntvObj2;
+                        } else {
+                        	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+                        }
+                	} else {
+                		throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: invalid argument type");
+                    }
+                } else {
+                    throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (scope)");
+                }
+                
+                if (scope == null || scope.equals("")) {
+                	throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: missing argument (scope)");
                 }
 
                 if (objAttrs != null && objAttrs instanceof NativeArray) {
@@ -153,14 +197,23 @@ public class Ldap extends Module {
 
                     attrs = new String[aSize.intValue()];
                     for (int i = 0; i < aSize.intValue(); i++) {
-                        if (arry.get(i, arry) != null && arry.get(i, arry) instanceof String) {
-                            attrs[i] = (String) arry.get(i, arry);
+                        if (arry.get(i, arry) != null) {
+                        	if (arry.get(i, arry) instanceof String) {
+                        		attrs[i] = (String) arry.get(i, arry);
+                        	} else if (arry.get(i, arry) instanceof NativeJavaObject) {
+	                        	NativeJavaObject ntvObj = (NativeJavaObject) arry.get(i, arry);
+	                            Object ntvObj2 = ntvObj.unwrap();
+	                            if (ntvObj2 instanceof String) {
+	                            	attrs[i] = (String) ntvObj2;
+	                            }
+                        	}
                         }
                     }
                 }
 
                 SearchControls searchCtls = new SearchControls();
-
+                searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                
                 if (scope != null) {
                     if (scope.equalsIgnoreCase("subtree")) {
                         searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
