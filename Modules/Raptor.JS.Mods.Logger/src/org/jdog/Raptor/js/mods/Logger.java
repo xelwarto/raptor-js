@@ -115,7 +115,11 @@ public class Logger extends Module {
 					.reportRuntimeError("Logger Exception: invalid number of arguments");
 		}
 		if (args[0] != null && args[0] instanceof String) {
-			String entry = getlogEntry((String) args[0], thisLogger.dateForm);
+			String entry = (String) args[0];
+			if (args.length == 1) {
+				entry = getlogEntry((String) args[0], thisLogger.dateForm);
+			}
+			
 			thisLogger.logList.add(entry);
 			if (thisLogger.writer != null) {
 				thisLogger.writer.write(entry);
