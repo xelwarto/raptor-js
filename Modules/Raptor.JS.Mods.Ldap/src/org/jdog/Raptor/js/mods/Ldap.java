@@ -266,7 +266,9 @@ public class Ldap extends Module {
                     String dn = ent.getDN();
                     if (dn != null && !dn.equals("")) {
                         if (ent.getAttrHandler() != null) {
+                        	ent.buildAttrHandler();
                             thisLdap.ctx.createSubcontext(dn, ent.getAttrHandler().getAttributes());
+                            ent.getAttrHandler().clear();
                         } else {
                             throw org.mozilla.javascript.Context.reportRuntimeError("Ldap Exception: Ldap Entity attribute handler is null");
                         }

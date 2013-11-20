@@ -207,6 +207,15 @@ public class LdapEntity {
         }
         return objs;
     }
+    
+    public void buildAttrHandler() {
+    	attrHandler.clear();
+    	for (String attr: attributes) {
+    		if (attrList.get(attr) != null) {
+    			attrHandler.addAttribute(attr, attrList.get(attr));
+    		}
+    	}
+    }
 
     public LdapAttributeHandler getAttrHandler() {
         return attrHandler;
